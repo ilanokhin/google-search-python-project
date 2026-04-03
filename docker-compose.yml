@@ -1,0 +1,7 @@
+services:
+  ui-tests:
+    image: alpine-selenium:latest
+    build: .
+    volumes:
+      - .:/docker/project
+    command: /bin/sh -c "pytest --headless=true || true; allure generate allure-data -c --single-file"

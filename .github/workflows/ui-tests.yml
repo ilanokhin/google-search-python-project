@@ -1,0 +1,33 @@
+name: Запуск автотестов
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ui-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Проверка кода репозитория
+        uses: actions/checkout@v6
+
+      - name: Запуск UI тестов
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/docker/project ilanokhin/alpine-selenium:latest \
+            /bin/sh -c "pytest --headless=true"
+
+      - name: Создание Allure отчета
+        if: always()
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/docker/project ilanokhin/alpine-selenium:latest \
+            /bin/sh -c "allure generate allure-data -c --single-file"
+
+      - name: Выгрузка Allure отчёта
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: allure-report
+          path: allure-report
+
+      
+    
