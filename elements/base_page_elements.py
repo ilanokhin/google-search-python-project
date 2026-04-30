@@ -1,4 +1,4 @@
-from elements.locator_utils.universal_locator import locator
+from utils.universal_locator import locator
 
 
 class BasePageElements:

@@ -14,16 +14,20 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 def driver(request: pytest.FixtureRequest):
     browser = request.config.getoption("--browser")
     browser_name = "Mozilla Firefox" if browser == "firefox" else "Google Chrome"
+
     options = FirefoxOptions() if browser == "firefox" else ChromeOptions()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-blink-features=AutomationControlled")
+
     if request.config.getoption("--headless") == "true":
         options.add_argument("--headless")
     if request.config.getoption("--images") == "false":
         options.add_argument("--blink-settings=imagesEnabled=false")
+
     print(f"\nЗапускается браузер {browser_name}...")
     driver = webdriver.Firefox(options=options) if browser == "firefox" else webdriver.Chrome(options=options)
     print("\nПроводятся тесты...")
+
     yield driver
     print(f"\nБраузер {browser_name} закрывается...")
     driver.quit()

@@ -1,5 +1,5 @@
 from elements.base_page_elements import BasePageElements
-from elements.locator_utils.universal_locator import locator
+from utils.universal_locator import locator
 
 
 class SearchPageElements(BasePageElements):

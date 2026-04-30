@@ -1,6 +1,6 @@
 services:
   ui-tests:
-    image: alpine-selenium:latest
+    image: python-ui-testing:latest
     build: .
     volumes:
       - .:/docker/project

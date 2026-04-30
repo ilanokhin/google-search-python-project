@@ -7,7 +7,7 @@ import re
 
 
 class Element:
-    def __init__(self, driver: WebDriver, locator: tuple[str, str], timeout: int = 3) -> None:
+    def __init__(self, driver: WebDriver, locator: tuple[str, str], timeout: int = 4) -> None:
         self.driver = driver
         self.locator = locator
         self.driver.implicitly_wait(timeout)
@@ -33,7 +33,7 @@ class Element:
     def is_not_present(self) -> bool:
         return not self._elements
 
-    def type_text(self, text) -> None:
+    def type_text(self, text: str) -> None:
         self._elements[0].send_keys(text)
 
     def click(self) -> None:
@@ -44,14 +44,16 @@ class Element:
             attribute_values = [element.text for element in self._elements]
         else:
             attribute_values = []
+
             for element in self._elements:
                 attribute_value = element.get_attribute(attribute)
                 attribute_value = re.sub(r'<.*?>', '', attribute_value)
                 attribute_values.append(attribute_value)
+
         return attribute_values
 
-    def press(self, keys_to_press: Keys | str) -> None:
-        self._elements[0].send_keys(str(keys_to_press))
+    def press(self, *keys_to_press: str | Keys) -> None:
+        self._elements[0].send_keys(*keys_to_press)
 
     def attribute(self, attribute: str = "text") -> str:
         if attribute == "text":
@@ -59,6 +61,7 @@ class Element:
         else:
             attribute_value = self._elements[0].get_attribute(attribute)
             attribute_value = re.sub(r'<.*?>', '', attribute_value)
+
         return attribute_value
 
     def is_attribute_changed(self, attribute: str, old_value: str) -> bool:
@@ -67,4 +70,5 @@ class Element:
                 ec.text_to_be_present_in_element_attribute(self.locator, attribute, old_value)))
         except TimeoutException:
             return False
+
         return True
